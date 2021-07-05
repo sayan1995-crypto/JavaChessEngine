@@ -516,7 +516,7 @@ public class Table extends Observable{
 			
 			for(final Move move : pieceLegalMove(board))
 			{
-				if((move.getDestinationCoordinate() == this.tileId) && 
+				if((move.getDestinationCoordinate() == this.tileId) &&  
 				   gameBoard.getCurrPlayer().makeMove(move).getMoveStatus().isDone())
 					try {
 						add(new JLabel(new ImageIcon(ImageIO.read(new File("resource/Art/misc/green_dot.png")))));
@@ -531,8 +531,17 @@ public class Table extends Observable{
 	
 	private Collection<Move> pieceLegalMove(final Board board)
 	{
-		if(humanMovedPiece !=null && humanMovedPiece.getPieceAlliance() == board.getCurrPlayer().getAlliance())
-			return humanMovedPiece.calculateLegalMoves(board);	
+		
+		if(humanMovedPiece !=null && 
+			humanMovedPiece.getPieceAlliance() == board.getCurrPlayer().getAlliance())
+			{
+			List<Move> pieceLegalMoves= new ArrayList<>();
+				for(Move move : board.getCurrPlayer().getLegalMoves())
+					if(move.getMovedPiece().equals(humanMovedPiece))
+						pieceLegalMoves.add(move);
+				
+				return pieceLegalMoves;						
+			}
 		return Collections.emptyList();
 	}
 	
