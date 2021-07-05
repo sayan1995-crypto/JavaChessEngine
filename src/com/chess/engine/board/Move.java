@@ -306,15 +306,15 @@ public abstract class Move {
 		protected final int rookDestinationCoordinate;
 		public castleMove(final Board board, 
 						  final Piece movedPiece,
-						  final Integer destinationmCordinate,
+						  final Integer destinationCordinate,
 						  final Rook castleRook,
 						  final int rookStartCoordinate,
 						  final int rookDestinationCoordinate
 						  ) 
 		{
-			super(board, movedPiece, destinationmCordinate);
+			super(board, movedPiece, destinationCordinate);
 			this.castleRook=castleRook;
-			this.rookStartCoordinate=rookDestinationCoordinate;
+			this.rookStartCoordinate=rookStartCoordinate;
 			this.rookDestinationCoordinate=rookDestinationCoordinate;
 		}
 		
@@ -325,7 +325,7 @@ public abstract class Move {
 		public Board execute() {
 			Board.Builder builder = new Builder();
 			for(final Piece piece : this.board.getCurrPlayer().getAllActivePieces())
-				if(!this.movedPiece.equals(piece) && !this.movedPiece.equals(castleRook))
+				if((!this.movedPiece.equals(piece)) && (!castleRook.equals(piece)))
 					builder.setPiece(piece);
 			for(final Piece piece : this.board.getCurrPlayer().getOpponent().getAllActivePieces())
 				builder.setPiece(piece);

@@ -8,10 +8,9 @@ import com.chess.engine.Alliance;
 import com.chess.engine.board.Board;
 import com.chess.engine.board.BoardUtills;
 import com.chess.engine.board.Move;
-import com.chess.engine.board.Tile;
 import com.chess.engine.board.Move.AttackMove;
 import com.chess.engine.board.Move.MajorMove;
-import com.chess.engine.piece.Piece.PieceType;
+import com.chess.engine.board.Tile;
 import com.google.common.collect.ImmutableList;
 
 public class King extends Piece{
@@ -49,21 +48,23 @@ public class King extends Piece{
 	return ImmutableList.copyOf(legalMoves);
 }	
 
-private boolean isFirstCoulmExclusion(Integer currentPosition , Integer destination)
-{
-	return BoardUtills.FIRST_COLUMN[currentPosition] &&(destination==-9 ||
-			destination==-1 || destination==7);	
-}
-private boolean isEightCoulmExclusion(Integer currentPosition , Integer destination)
-{
-	return BoardUtills.EIGHTH_COLUMN[currentPosition] &&(destination==9 || 
-			destination==1 || destination==7);	
-}
+	private boolean isFirstCoulmExclusion(Integer currentPosition, Integer destination) {
+	return BoardUtills.FIRST_COLUMN[currentPosition] && (destination == -9 || destination == -1 || destination == 7);
+	}
 
-@Override
-public boolean isKing() {return true;}
-@Override
-public Piece movePiece(Move move) {
-	return new King(move.getDestinationCoordinate(), move.getMovedPiece().getPieceAlliance() , false);
-}
+	private boolean isEightCoulmExclusion(Integer currentPosition, Integer destination) {
+	return BoardUtills.EIGHTH_COLUMN[currentPosition] && (destination == 9 || destination == 1 || destination == 7);
+	}
+
+	
+	
+	@Override
+	public boolean isKing() {
+	return true;
+	}
+
+	@Override
+	public Piece movePiece(Move move) {
+	return new King(move.getDestinationCoordinate(), move.getMovedPiece().getPieceAlliance(), false);
+	}
 }

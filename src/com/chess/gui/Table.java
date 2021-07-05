@@ -516,7 +516,7 @@ public class Table extends Observable{
 			
 			for(final Move move : pieceLegalMove(board))
 			{
-				if((move.getDestinationCoordinate() == this.tileId) && 
+				if((move.getDestinationCoordinate() == this.tileId) &&  
 				   gameBoard.getCurrPlayer().makeMove(move).getMoveStatus().isDone())
 					try {
 						add(new JLabel(new ImageIcon(ImageIO.read(new File("resource/Art/misc/green_dot.png")))));
