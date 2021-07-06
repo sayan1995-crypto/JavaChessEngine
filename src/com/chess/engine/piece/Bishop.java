@@ -9,8 +9,8 @@ import com.chess.engine.board.Board;
 import com.chess.engine.board.BoardUtills;
 import com.chess.engine.board.Move;
 import com.chess.engine.board.Tile;
-import com.chess.engine.board.Move.AttackMove;
-import com.chess.engine.board.Move.MajorMove;
+import com.chess.engine.board.Move.MajorPieceAttackMove;
+import com.chess.engine.board.Move.MajoPieceMove;
 import com.google.common.base.Objects.ToStringHelper;
 import com.google.common.collect.ImmutableList;
 
@@ -20,7 +20,7 @@ public class Bishop extends Piece {
 
 	public Bishop(Integer piecePosition, Alliance pieceAlliance, Boolean isFirstMove) {
 		super(PieceType.BISHOP, piecePosition, pieceAlliance, isFirstMove);
-		// TODO Auto-generated constructor stub
+
 	}
 
 
@@ -34,31 +34,33 @@ public class Bishop extends Piece {
 	public Collection<Move> calculateLegalMoves(final Board board) {
 		final List<Move> legalMoves = new ArrayList<>();
 		for (Integer currentCandidateOffset : CANDIDATE_MOVE_COORDINATES_VECTOR) {
-			Integer candidateDestinationCoordinate = this.piecePosition + currentCandidateOffset;
+			Integer candidateDestinationCoordinate = this.piecePosition;
 
-			while (BoardUtills.isValidTile(candidateDestinationCoordinate)) {
-				if (isFirstCoulmExclusion(this.piecePosition, currentCandidateOffset) 
-						|| isEightCoulmExclusion(this.piecePosition, currentCandidateOffset))
-					break;
+			while (BoardUtills.isValidTile(candidateDestinationCoordinate)){
+				if (isFirstCoulmExclusion(candidateDestinationCoordinate, currentCandidateOffset) 
+					|| isEightCoulmExclusion(candidateDestinationCoordinate, currentCandidateOffset))
+				break;
 
+				candidateDestinationCoordinate += currentCandidateOffset;
+				if(BoardUtills.isValidTile(candidateDestinationCoordinate)) {
 				final Tile candidateDestinationTile = board.getTile(candidateDestinationCoordinate);
 				if (!candidateDestinationTile.isTileOccupied())
 					{
-					legalMoves.add(new MajorMove(board, this, candidateDestinationCoordinate));
-					if(BoardUtills.FIRST_COLUMN[candidateDestinationCoordinate]
-						|| BoardUtills.EIGHTH_COLUMN[candidateDestinationCoordinate])
-						break;
+					legalMoves.add(new MajoPieceMove(board, this, candidateDestinationCoordinate));
+					
 					}
 				else {
 					if (candidateDestinationTile.getPiece().getPieceAlliance() != pieceAlliance)
-						legalMoves.add(new AttackMove(board, this, candidateDestinationCoordinate,
-								candidateDestinationTile.getPiece()));
+						legalMoves.add(new MajorPieceAttackMove(board, this,
+								candidateDestinationCoordinate,candidateDestinationTile.getPiece()));
+											
 					break;
 				}
 
-				candidateDestinationCoordinate += currentCandidateOffset;
 			}
 		}
+
+	}
 
 		return ImmutableList.copyOf(legalMoves);
 	}

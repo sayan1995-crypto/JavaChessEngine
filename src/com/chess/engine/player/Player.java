@@ -26,7 +26,7 @@ public abstract class Player {
 		this.legalMoves = ImmutableList.copyOf(Iterables.concat(legalMoves, calculateCastleMove(legalMoves, opponentMoves)));
 		this.isInCheck=!Player.calculateAttackeOnTile(this.playerKing.getPiecePosition(), opponentMoves).isEmpty();
 	}
-	public static Collection<Move> calculateAttackeOnTile(Integer piecePosition, Collection<Move> moves) {
+	protected static Collection<Move> calculateAttackeOnTile(Integer piecePosition, Collection<Move> moves) {
 		final List<Move> attackMoves=new ArrayList<>();
 		for(final Move move : moves)
 			if(piecePosition==move.getDestinationCoordinate())

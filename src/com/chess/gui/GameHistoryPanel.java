@@ -47,7 +47,7 @@ class GameHistoryPanel extends JPanel {
                 currentRow++;
             }
         }
-
+/*
         if(moveHistory.getMoves().size() > 0) {
             final Move lastMove = moveHistory.getMoves().get(moveHistory.size() - 1);
             final String moveText = lastMove.toString();
@@ -59,7 +59,7 @@ class GameHistoryPanel extends JPanel {
                 this.model.setValueAt(moveText + calculateCheckAndCheckMateHash(board), currentRow - 1, 1);
             }
         }
-
+*/
         final JScrollBar vertical = scrollPane.getVerticalScrollBar();
         vertical.setValue(vertical.getMaximum());
 
