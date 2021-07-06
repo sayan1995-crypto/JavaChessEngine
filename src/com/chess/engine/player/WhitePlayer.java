@@ -27,6 +27,9 @@ public class WhitePlayer extends Player{
 
 	@Override
 	public Alliance getAlliance() {return Alliance.WHITE;}
+	
+	@Override
+	public String toString() {return Alliance.WHITE.toString();}
 
 	@Override
 	public Player getOpponent() {

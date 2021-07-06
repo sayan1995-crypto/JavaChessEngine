@@ -24,6 +24,7 @@ public enum Alliance {
 		
 		}
 		
+		
 	},
 	WHITE {
 		@Override
@@ -40,10 +41,13 @@ public enum Alliance {
 		public boolean isPawnPromotionTile(int tileId) {
 			return BoardUtills.EIGHTH_RANK[tileId];
 		}
+		
 	};
 	public abstract Integer getDirection();
 	public abstract Boolean isWhite();
 	public abstract Boolean isBlack();
 	public abstract Player choosePlayer(WhitePlayer whitePlayer, BlackPlayer blackPlayer);
 	public abstract boolean isPawnPromotionTile(int tileId);
+	
+	
 }

@@ -8,8 +8,8 @@ import com.chess.engine.Alliance;
 import com.chess.engine.board.Board;
 import com.chess.engine.board.BoardUtills;
 import com.chess.engine.board.Move;
-import com.chess.engine.board.Move.AttackMove;
-import com.chess.engine.board.Move.MajorMove;
+import com.chess.engine.board.Move.MajorPieceAttackMove;
+import com.chess.engine.board.Move.MajoPieceMove;
 import com.chess.engine.board.Tile;
 import com.google.common.collect.ImmutableList;
 
@@ -17,9 +17,9 @@ public class King extends Piece{
 
 	private final static Integer[] CANDIDATE_MOVE_COORDINATES_OFFSET = {-9, -8, -7, -1, +1, +7, +8, +9};
 	
-	public King(Integer piecePosition, Alliance pieceAlliance , Boolean isFirstMove) {
+	public King(final Integer piecePosition,final Alliance pieceAlliance ,final Boolean isFirstMove) {
 		super(PieceType.KING , piecePosition, pieceAlliance , isFirstMove);
-		// TODO Auto-generated constructor stub
+		
 	}
 
 	@Override
@@ -28,7 +28,7 @@ public class King extends Piece{
 		return PieceType.KING.toString();
 	}
 	@Override
-	public Collection<Move> calculateLegalMoves(Board board) {
+	public Collection<Move> calculateLegalMoves(final Board board) {
 		final List<Move> legalMoves = new ArrayList<>();
 		for (Integer currentCandidateOffest : CANDIDATE_MOVE_COORDINATES_OFFSET) {
 		final Integer candidateDestinationCoordinate = this.piecePosition + currentCandidateOffest;
@@ -38,21 +38,21 @@ public class King extends Piece{
 				continue;
 			final Tile candidateDestinationTile = board.getTile(candidateDestinationCoordinate);
 			if (!candidateDestinationTile.isTileOccupied())
-				legalMoves.add(new MajorMove(board, this, candidateDestinationCoordinate));
+				legalMoves.add(new MajoPieceMove(board, this, candidateDestinationCoordinate));
 			else {
 				if (candidateDestinationTile.getPiece().getPieceAlliance() != pieceAlliance)
-					legalMoves.add(new AttackMove(board, this, candidateDestinationCoordinate, candidateDestinationTile.getPiece()));
+					legalMoves.add(new MajorPieceAttackMove(board, this, candidateDestinationCoordinate, candidateDestinationTile.getPiece()));
 			}
 		}
 	}		
 	return ImmutableList.copyOf(legalMoves);
 }	
 
-	private boolean isFirstCoulmExclusion(Integer currentPosition, Integer destination) {
+	private boolean isFirstCoulmExclusion(final Integer currentPosition,final Integer destination) {
 	return BoardUtills.FIRST_COLUMN[currentPosition] && (destination == -9 || destination == -1 || destination == 7);
 	}
 
-	private boolean isEightCoulmExclusion(Integer currentPosition, Integer destination) {
+	private boolean isEightCoulmExclusion(final Integer currentPosition,final Integer destination) {
 	return BoardUtills.EIGHTH_COLUMN[currentPosition] && (destination == 9 || destination == 1 || destination == 7);
 	}
 
@@ -64,7 +64,7 @@ public class King extends Piece{
 	}
 
 	@Override
-	public Piece movePiece(Move move) {
+	public Piece movePiece(final Move move) {
 	return new King(move.getDestinationCoordinate(), move.getMovedPiece().getPieceAlliance(), false);
 	}
 }

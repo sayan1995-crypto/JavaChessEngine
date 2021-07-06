@@ -176,10 +176,9 @@ public class Board {
 		public void setEnPassantPawn(Pawn movedPawn) {
 			this.enPassantPawn=movedPawn;
 		}
-		public Pawn getEnPassantPawn()
-		{
-			return this.enPassantPawn;
-		}
+		/*
+		 * public Pawn getEnPassantPawn() { return this.enPassantPawn; }
+		 */
 	}
 
 	

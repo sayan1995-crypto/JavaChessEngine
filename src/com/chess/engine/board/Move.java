@@ -41,7 +41,7 @@ public abstract class Move {
 
 	public boolean isInAttack() {return false;}
 	public boolean isCastlingMove() {return false;}
-	public Piece getAttackedPiece() {return null;}	
+	public Piece getAttackedPiece() {return null;}
 	
 	@Override
 	public int hashCode() {
@@ -85,37 +85,52 @@ public abstract class Move {
 
 
 
-	public static class MajorMove extends Move{		
-		public MajorMove(Board board, Piece movedPiece, Integer destinationmCordinate) {
+	public static class MajoPieceMove extends Move{		
+		public MajoPieceMove(Board board, Piece movedPiece, Integer destinationmCordinate) {
 			super(board, movedPiece, destinationmCordinate);			
 		}
 		
 		@Override
-		public String toString()
-		{
-			return movedPiece.getPieceType().toString()+BoardUtills.getPositionAtCoordinate(this.destinationmCordinate);
-			//return "foo";
+		public String toString(){return BoardUtills.generateMoveNotation(this);}
+
+		@Override
+		public int hashCode() {
+			return super.hashCode();
 		}
+
+		@Override
+		public boolean equals(Object obj) {
+			if (this == obj)
+				return true;
+			if (!super.equals(obj))
+				return false;
+			if (!(obj instanceof MajoPieceMove))
+				return false;
+			return true;
+		}
+		
 		
 	}	
 	
-	public static class AttackMove extends Move{
-		private final Piece attakedPiece;
-		public AttackMove(Board board, Piece movedPiece, Integer destinationmCordinate , Piece attackedPiece) {
+	public static class MajorPieceAttackMove extends Move{
+		private final Piece attackedPiece;
+		public MajorPieceAttackMove(Board board, Piece movedPiece, Integer destinationmCordinate , Piece attackedPiece) {
 			super(board, movedPiece, destinationmCordinate);
-			this.attakedPiece=attackedPiece;		
+			this.attackedPiece=attackedPiece;		
 		}
 		
 		@Override
 		public boolean isInAttack() {return true;}
 		@Override
-		public Piece getAttackedPiece() {return attakedPiece;}
-
+		public Piece getAttackedPiece() {return attackedPiece;}
+		@Override
+		public String toString(){return BoardUtills.generateMoveNotation(this);}
+		
 		@Override
 		public int hashCode() {
 			final int prime = 31;
 			int result = super.hashCode();
-			result = prime * result + ((attakedPiece == null) ? 0 : attakedPiece.hashCode());
+			result = prime * result + ((attackedPiece == null) ? 0 : attackedPiece.hashCode());
 			return result;
 		}
 
@@ -127,11 +142,11 @@ public abstract class Move {
 				return false;
 			if (getClass() != obj.getClass())
 				return false;
-			AttackMove other = (AttackMove) obj;
-			if (attakedPiece == null) {
-				if (other.attakedPiece != null)
+			MajorPieceAttackMove other = (MajorPieceAttackMove) obj;
+			if (attackedPiece == null) {
+				if (other.attackedPiece != null)
 					return false;
-			} else if (!attakedPiece.equals(other.attakedPiece))
+			} else if (!attackedPiece.equals(other.attackedPiece))
 				return false;
 			return true;
 		}
@@ -140,27 +155,66 @@ public abstract class Move {
 	}
 
 
-	public static class PawnMove extends MajorMove{		
+	public static class PawnMove extends Move{
 		public PawnMove(Board board, Piece movedPiece, Integer destinationmCordinate) {
 			super(board, movedPiece, destinationmCordinate);			
 		}
-		
+		@Override
+		public String toString(){return BoardUtills.generateMoveNotation(this);}
+		@Override
+		public int hashCode() {
+			return super.hashCode();
+		}
+		@Override
+		public boolean equals(Object obj) {
+			if (this == obj)
+				return true;
+			if (!super.equals(obj))
+				return false;
+			if (!(obj instanceof PawnMove))
+				return false;
+			return true;
+		}
 		
 		
 	}
 	
-	public static class PawnAttackMove extends AttackMove{
+	public static class PawnAttackMove extends Move{
 
+		private final Piece attackedPiece;
 		public PawnAttackMove(Board board, Piece movedPiece, Integer destinationmCordinate, Piece attackedPiece) {
-			super(board, movedPiece, destinationmCordinate, attackedPiece);
+			super(board, movedPiece, destinationmCordinate);
+			this.attackedPiece=attackedPiece;
 		}
 		
 		@Override
-		public String toString()
-		{
-			return BoardUtills.getPositionAtCoordinate(this.movedPiece.getPiecePosition()).substring(0,1)+"x"+
-					BoardUtills.getPositionAtCoordinate(this.destinationmCordinate);
+		public String toString(){return BoardUtills.generateMoveNotation(this);}
+		@Override
+		public boolean isInAttack() {return true;}
+		@Override
+		public Piece getAttackedPiece() {return attackedPiece;}
+
+		@Override
+		public int hashCode() {
+			final int prime = 31;
+			int result = super.hashCode();
+			result = prime * result + Objects.hash(attackedPiece);
+			return result;
 		}
+
+		@Override
+		public boolean equals(Object obj) {
+			if (this == obj)
+				return true;
+			if (!super.equals(obj))
+				return false;
+			if (!(obj instanceof PawnAttackMove))
+				return false;
+			PawnAttackMove other = (PawnAttackMove) obj;
+			return Objects.equals(attackedPiece, other.attackedPiece);
+		}
+		
+		
 		
 	}
 	
@@ -220,11 +274,12 @@ public abstract class Move {
 		
 		final Move decoratedMove;
 		final Pawn promotedPawn;
+		final Piece promotedPiece;
 		public PawnPromotion(final Move decoratedMove) {
 			super(decoratedMove.getBoard(), decoratedMove.getMovedPiece(),decoratedMove.getDestinationCoordinate());
-			
 			this.decoratedMove=decoratedMove;
 			this.promotedPawn=(Pawn)decoratedMove.getMovedPiece();
+			this.promotedPiece=promotedPawn.getPromotedPiece();
 		}
 		
 		@Override
@@ -238,12 +293,10 @@ public abstract class Move {
 			for(final Piece piece : pawnMovedBoard.getCurrPlayer().getOpponent().getAllActivePieces())
 				builder.setPiece(piece);
 			//set the promoted piece
-			builder.setPiece(this.promotedPawn.getPromotedPiece().movePiece(this));
+			
+			builder.setPiece(promotedPiece.movePiece(this));
 			builder.setAlliance(pawnMovedBoard.getCurrPlayer().getAlliance());
-			return builder.build();
-			
-			
-			
+			return builder.build();			
 			
 		}
 		@Override
@@ -256,11 +309,13 @@ public abstract class Move {
 		{
 			return decoratedMove.getAttackedPiece();
 		}
-		@Override
-		public String toString()
+		public Piece getPromotedPiece()
 		{
-			return "";
+			return this.promotedPiece;
 		}
+		
+		@Override
+		public String toString(){return BoardUtills.generateMoveNotation(this);}
 
 		@Override
 		public int hashCode() {
@@ -299,7 +354,7 @@ public abstract class Move {
 	
 	
 	
-	static class castleMove extends Move{		
+	public static class castleMove extends Move{		
 		
 		protected final Rook castleRook;
 		protected final int rookStartCoordinate;
@@ -379,10 +434,9 @@ public abstract class Move {
 			super(board, movedPiece, destinationmCordinate, castleRook, rookStartCoordinate, rookDestinationCoordinate);
 
 		}
+		
 		@Override
-		public String toString() {
-			return "0-0";
-		}	
+		public String toString() {return BoardUtills.generateMoveNotation(this);}	
 		
 	}
 	
@@ -391,13 +445,10 @@ public abstract class Move {
 		public QueenSideCastleMove(Board board, Piece movedPiece, Integer destinationmCordinate, Rook castleRook,
 				int rookStartCoordinate, int rookDestinationCoordinate) {
 			super(board, movedPiece, destinationmCordinate, castleRook, rookStartCoordinate, rookDestinationCoordinate);
-			// TODO Auto-generated constructor stub
+			
 		}
 		@Override
-		public String toString()
-		{
-			return "0-0-0";
-		}
+		public String toString(){return BoardUtills.generateMoveNotation(this);}
 		
 	}
 	
@@ -443,5 +494,5 @@ public abstract class Move {
 
 	
 	
-	}
+}
 
