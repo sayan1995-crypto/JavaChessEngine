@@ -137,6 +137,36 @@ public class Board {
 		
 	}
 	
+	public static Board createTestBoard()
+	{
+
+		Builder builder = new Builder();
+		builder.setPiece(new Rook(0, Alliance.BLACK , true));
+		//builder.setPiece(new Knight(1, Alliance.BLACK , true));
+		builder.setPiece(new Bishop(2,Alliance.BLACK , true));
+		builder.setPiece(new Queen(3,Alliance.BLACK , true));
+		builder.setPiece(new King(6, Alliance.BLACK , true));
+		builder.setPiece(new Bishop(5,Alliance.BLACK , true));
+		//builder.setPiece(new Knight(6, Alliance.BLACK , true));
+		builder.setPiece(new Rook(7, Alliance.BLACK , true));
+		
+		//builder.setPiece(new Rook(32, Alliance.WHITE, true));
+		//builder.setPiece(new Rook(16, Alliance.WHITE, true));
+		builder.setPiece(new Knight(42, Alliance.WHITE, true));
+		//builder.setPiece(new Bishop(58,Alliance.WHITE, true));
+		builder.setPiece(new Queen(11,Alliance.WHITE, true));
+		builder.setPiece(new Queen(35,Alliance.WHITE, true));
+		builder.setPiece(new Queen(32,Alliance.WHITE, true));
+		builder.setPiece(new King(60, Alliance.WHITE, true));
+		builder.setPiece(new Bishop(61,Alliance.WHITE, true));
+		builder.setPiece(new Knight(62, Alliance.WHITE, true));
+		builder.setPiece(new Rook(63, Alliance.WHITE, true));		
+		builder.setAlliance(Alliance.WHITE);
+		
+		return builder.build();
+		
+	}
+	
 	
 	
 	

@@ -69,7 +69,7 @@ public class Table extends Observable{
     
 	private Table()
 	{
-		this.gameBoard=Board.createStandardBoard();
+		this.gameBoard=Board.createTestBoard();
 		this.gameFrame=new JFrame("JChess");	
 		this.gameFrame.setSize(OUTER_FRAME_DIAMENTION);
 		this.gameFrame.setLayout(new BorderLayout());

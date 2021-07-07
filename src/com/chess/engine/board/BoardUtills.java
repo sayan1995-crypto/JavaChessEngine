@@ -8,9 +8,11 @@ import java.util.Map;
 import com.chess.engine.board.Move.MajoPieceMove;
 import com.chess.engine.board.Move.MajorPieceAttackMove;
 import com.chess.engine.board.Move.PawnAttackMove;
+import com.chess.engine.board.Move.PawnEnPassantAttackMove;
 import com.chess.engine.board.Move.PawnJump;
 import com.chess.engine.board.Move.PawnMove;
 import com.chess.engine.board.Move.PawnPromotion;
+import com.chess.engine.piece.Piece;
 import com.google.common.collect.ImmutableMap;
 
 public class BoardUtills {
@@ -91,7 +93,9 @@ public class BoardUtills {
 		if (move.getClass().equals(MajoPieceMove.class)) {
 			// Major Piece first letter append with destination coordinate
 			// e.g. Ne3
+			
 			moveNotation.append(move.getMovedPiece().toString())
+			.append(moveAmguityResolver(move))
 			.append(ALGEBREIC_NOTATION[move.getDestinationCoordinate()])
 			.append(calChkandChkMateNotation(move));
 			
@@ -99,7 +103,9 @@ public class BoardUtills {
 		} else if (move.getClass().equals(MajorPieceAttackMove.class)) {
 			// Major Piece first letter append x append captured piece destination
 			// coordinate
-			moveNotation.append(move.getMovedPiece().toString()).append("x")
+			moveNotation.append(move.getMovedPiece().toString())
+			.append(moveAmguityResolver(move))
+			.append("x")
 			.append(ALGEBREIC_NOTATION[move.getDestinationCoordinate()])
 			.append(calChkandChkMateNotation(move));
 
@@ -108,7 +114,7 @@ public class BoardUtills {
 			moveNotation.append(ALGEBREIC_NOTATION[move.getDestinationCoordinate()])
 			.append(calChkandChkMateNotation(move));
 
-		} else if (move.getClass().equals(PawnAttackMove.class)) {
+		} else if (move.getClass().equals(PawnAttackMove.class) || move.getClass().equals(PawnEnPassantAttackMove.class)) {
 			moveNotation.append(ALGEBREIC_NOTATION[move.getCurrentCoordinate()].substring(0, 1)).append("x")
 			.append(ALGEBREIC_NOTATION[move.getDestinationCoordinate()])
 			.append(calChkandChkMateNotation(move));
@@ -138,5 +144,52 @@ public class BoardUtills {
 		if(transitionBoard.getCurrPlayer().isInCheck())
 			return "+";
 		return "";
+	}
+	
+	private static String moveAmguityResolver(final Move move) {
+		StringBuilder builder = new StringBuilder();
+		/*
+		 * For similar kind of pieces we need to store rank and file list for comparing.
+		 */
+		
+		List<String> rankList = new ArrayList<>();
+		List<String> fileList = new ArrayList<>();
+		
+		/*
+		 * Logic:- Check for the destination tile. If the destination tile can be
+		 * occupied with the same type of piece add the prefix
+		 */
+		for (final Move otherPieceMove : move.getBoard().getCurrPlayer().getLegalMoves()) {
+			Piece otherPiece = otherPieceMove.getMovedPiece();
+			if (otherPieceMove.getDestinationCoordinate() == move.getDestinationCoordinate()
+					&& !otherPiece.equals(move.getMovedPiece())
+					&& otherPiece.getPieceType().equals(move.getMovedPiece().getPieceType())) {
+				// Since in some rare scenario, we have more than two such pieces,
+				// We should store it in array.
+				rankList.add(getRank(otherPiece.getPiecePosition()));
+				fileList.add(getFile(otherPiece.getPiecePosition()));
+				
+			}
+		}
+		
+		if(!fileList.contains(getFile(move.getCurrentCoordinate())))
+			builder.append(getFile(move.getCurrentCoordinate()));
+		else if(!rankList.contains(getRank(move.getCurrentCoordinate())))
+			builder.append(getRank(move.getCurrentCoordinate()));
+		else
+			builder.append(getFile(move.getCurrentCoordinate()))
+			.append(getRank(move.getCurrentCoordinate()));
+
+			return builder.toString();
+
+	}
+	
+	private static String getRank(int coordinate)
+	{
+		return ALGEBREIC_NOTATION[coordinate].substring(1,2);
+	}
+	private static String getFile(int coordinate)
+	{
+		return ALGEBREIC_NOTATION[coordinate].substring(0,1);
 	}
 }
