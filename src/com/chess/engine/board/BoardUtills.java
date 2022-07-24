@@ -172,6 +172,7 @@ public class BoardUtills {
 			}
 		}
 		
+		if(!(fileList.isEmpty() || rankList.isEmpty())) {
 		if(!fileList.contains(getFile(move.getCurrentCoordinate())))
 			builder.append(getFile(move.getCurrentCoordinate()));
 		else if(!rankList.contains(getRank(move.getCurrentCoordinate())))
@@ -179,7 +180,7 @@ public class BoardUtills {
 		else
 			builder.append(getFile(move.getCurrentCoordinate()))
 			.append(getRank(move.getCurrentCoordinate()));
-
+		}
 			return builder.toString();
 
 	}

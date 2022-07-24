@@ -69,7 +69,7 @@ public class Table extends Observable{
     
 	private Table()
 	{
-		this.gameBoard=Board.createTestBoard();
+		this.gameBoard=Board.createStandardBoard();
 		this.gameFrame=new JFrame("JChess");	
 		this.gameFrame.setSize(OUTER_FRAME_DIAMENTION);
 		this.gameFrame.setLayout(new BorderLayout());
@@ -151,7 +151,7 @@ public class Table extends Observable{
 
 			@Override
 			protected Move doInBackground() throws Exception {
-				final MoveStrategy miniMax = new MiniMax(4);
+				final MoveStrategy miniMax = new MiniMax(3);
 				final Move bestMove = miniMax.execute(Table.get().getGameBoard());
 				return bestMove;
 			}

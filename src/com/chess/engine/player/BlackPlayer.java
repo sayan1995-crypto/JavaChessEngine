@@ -46,22 +46,19 @@ public class BlackPlayer extends Player {
 		 */
 		
 		//Black king side castle move
-		if(this.playerKing.isFirstMove() && !this.isInCheck() && this.board.getTile(0).isTileOccupied() && this.board.getTile(0).getPiece().isFirstMove())
+		if(this.playerKing.isFirstMove() && !this.isInCheck() && this.board.getTile(7).isTileOccupied() && this.board.getTile(7).getPiece().isFirstMove())
 			if(!this.board.getTile(5).isTileOccupied() && Player.calculateAttackeOnTile(5,opponentPlayerLegalMove).isEmpty()
 				&&!this.board.getTile(6).isTileOccupied() && Player.calculateAttackeOnTile(6,opponentPlayerLegalMove).isEmpty())
-			
 				castleMoves.add(new Move.KingSideCastleMove(this.board, this.playerKing, 6, (Rook)this.board.getTile(7).getPiece(),
 						7,5));
 		
 		//Black queen side castle move
-		if(this.playerKing.isFirstMove() && !this.isInCheck() && this.board.getTile(7).isTileOccupied() && this.board.getTile(7).getPiece().isFirstMove())
+		if(this.playerKing.isFirstMove() && !this.isInCheck() && this.board.getTile(0).isTileOccupied() && this.board.getTile(0).getPiece().isFirstMove())
 			if(!this.board.getTile(1).isTileOccupied() && Player.calculateAttackeOnTile(1,opponentPlayerLegalMove).isEmpty()
 				&&!this.board.getTile(2).isTileOccupied() && Player.calculateAttackeOnTile(2,opponentPlayerLegalMove).isEmpty()
 				&&!this.board.getTile(3).isTileOccupied() && Player.calculateAttackeOnTile(3,opponentPlayerLegalMove).isEmpty())
-			
 				castleMoves.add(new Move.QueenSideCastleMove(this.board, this.playerKing,2,(Rook)this.board.getTile(0).getPiece(), 0, 3));
-		
-		
+			
 		
 		return ImmutableList.copyOf(castleMoves);
 		
